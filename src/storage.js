@@ -5,13 +5,15 @@ let data = {
             username: 'mmaric',
             email: 'marko.maric@mail.com',
             password: '$PeZ0501$',
+            budzet: '750'
         },
 
         {
             user_id: '2254879',
             username: 'iivic',
             email: 'ivan.ivic@mail.com',
-            password: '$?Je05Z01?$',
+            password: '$?Je05Z01?$', 
+            budzet: '650'
         },
 
         {
@@ -19,6 +21,7 @@ let data = {
             username: 'bboric',
             email: 'borna.boric@mail.com',
             password: 'eZ055301Ze',
+            budzet: '700'
         },
 
         {
@@ -26,6 +29,7 @@ let data = {
             username: 'vvesnic',
             email: 'vesna.vesnic@mail.com',
             password: 'PeZ0&&501',
+            budzet: '800'
         },
 
         {
@@ -33,6 +37,7 @@ let data = {
             username: 'mmartic',
             email: 'marta.martic@mail.com',
             password: '$$PeZ0501$$',
+            budzet: '750'
         },
 
         {
@@ -40,6 +45,7 @@ let data = {
             username: 'jjosic',
             email: 'josip.josic@mail.com',
             password: '$$BeZ0503$$',
+            budzet: '750'
         },
 
         {
@@ -47,6 +53,7 @@ let data = {
             username: 'aanic',
             email: 'ana.anic@mail.com',
             password: '!!PeZ0501!!',
+            budzet: '700'
         },
 
         {
@@ -54,6 +61,7 @@ let data = {
             username: 'kklaric',
             email: 'klara.klaric@mail.com',
             password: '??0501PeP??',
+            budzet: '600'
         },
 
         {
@@ -61,6 +69,7 @@ let data = {
             username: 'llenic',
             email: 'lea.lenic@mail.com',
             password: '$$RtA0105$$',
+            budzet: '600'
         },
 
         {
@@ -68,8 +77,19 @@ let data = {
             username: 'rreic',
             email: 'rea.reic@mail.com',
             password: '$$0808MeM$$',
+            budzet: '650'
         },
     ],
+
+    jedan_korisnik: {
+        data: {
+            user_id: '1452523',
+            username: 'rreic',
+            email: 'rea.reic@mail.com',
+            password: '$$0808MeM$$',
+            budzet: '650'
+        },
+    },
 
     namirnice: [
         {
@@ -143,13 +163,23 @@ let data = {
         },
     ],
 
+    jedna_namirnica: {
+        data: {
+            grocerie_id: '2514213',
+            grocerie_name: 'Orange juice',
+            category: 'drinks',
+            price: 8.0,            
+        },
+    },
+
+    /*
     pretragaNamirnicaNaziv: {
         data: [ 
-        {
-            grocerie_name: 'Tomato',
-        },
-    ],
-    },
+            {
+                grocerie_name: 'Tomato',
+            },
+        ],
+    },*/
 
     shoppingListe: [
         {
@@ -194,6 +224,61 @@ let data = {
             date: Date.now(),
         },
     ],
+
+
+    jedna_shoppingLista: {
+        data: {
+            list_id: '4567891',
+            list_name: 'Plodine',
+            date: Date.now(),                        
+        },
+    },
+
+    sadrzajShoppingListe: {
+        data: {
+                list_id: '6678912',
+                list_name: 'BBQ',
+                date: '30-04-2021',
+                total: '245',
+                namirnice_lista:[
+                
+                
+                    {
+                    grocerie_id: '7481212',
+                    grocerie_name: 'Pork',
+                    category: 'meat',
+                    price: 25.0,
+                    kolicina: 1
+
+                    },
+               ],
+        },
+    },
+
+    sadrzajFrizidera: {
+        data: {
+            
+                namirnice_lista:[                
+                
+                    {
+                        grocerie_id: '7481212',
+                        grocerie_name: 'Pork',
+                        category: 'meat',
+                        price: 25.0,
+                        stavka_frizider:{
+                            kolicina: 1,
+                            rok_trajanja:'02-05-2021',
+                            boja:'crveno'
+                        },
+                    
+
+                    },
+               ],
+            
+        },
+    },
+            
+    
 
     
 };
