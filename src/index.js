@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import data from './storage';
+import baza from './storage2';
 
 
 const app = express(); 
@@ -10,7 +10,46 @@ app.use(express.json ());
 app.use(cors())
 
 
-// dohvaćanje korisnika   
+app.get('/proba', (req, res) => {
+    let cards = baza.data1.namjernice
+    let query = req.query
+
+    if (query.title && query.Category ) {
+
+        cards = cards.filter(x => x.naziv_namjernice.indexOf(query.title) >=0).filter(x => x.kategorija.indexOf(query.Category)  >=0)
+        
+    }
+
+    res.json(cards)
+})
+
+
+/*app.get('/posts', (req, res) => {
+    let posts = storage.posts
+    let query = req.query
+    
+    if (query.title) {
+        posts = posts.filter(e => e.title.indexOf(query.title) >= 0)
+    }
+    
+    if (query.createdBy) {
+        posts = posts.filter(e => e.createdBy.indexOf(query.createdBy) >= 0)
+    }
+    
+    if (query._any) {
+        let terms = query._any.split(" ")
+        posts = posts.filter(doc => {
+            let info = doc.title + " " + doc.createdBy
+            return terms.every(term => info.indexOf(term) >= 0)
+        })
+    }
+
+    res.json(posts)
+})
+*/
+
+
+/* // dohvaćanje korisnika   
 app.get ('/korisnici', (req, res) =>  {
     res.json(data.korisnici);
 });
@@ -93,7 +132,7 @@ app.post ('/sadrzajShoppingListe', (req, res) => {
     res.statusCode = 201;
     res.setHeader ('Location', '/sadrzajShoppingListe/2356');
     res.send({});
-});
+}); */
 
 
 
