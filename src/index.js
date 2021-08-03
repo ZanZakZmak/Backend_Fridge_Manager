@@ -9,18 +9,39 @@ const port = 3000;
 app.use(express.json ());
 app.use(cors())
 
-
-app.get('/proba', (req, res) => {
-    let cards = baza.data1.namjernice
+//Frižider operacije 
+app.get('/fridge', (req, res) => {
+    let cards = baza.data1.fridge.fridge_namjernice
     let query = req.query
 
     if (query.title && query.Category ) {
 
         cards = cards.filter(x => x.naziv_namjernice.indexOf(query.title) >=0).filter(x => x.kategorija.indexOf(query.Category)  >=0)
         
+    }else {
+
+        cards = cards.filter(x => x.kategorija.indexOf(query.Category)  >=0)
+        
     }
 
     res.json(cards)
+})
+//šoping lista operacije
+app.get('/shoppinglist',(req, res)=>{
+    let query = req.query
+    let lists=baza.data1.shopping_liste
+    res.json(lists)
+})
+//odabir namjernice operacije
+app.get('/choosegrocery',(req, res)=>{
+    let grocery=baza.data1.namjernice
+    let query = req.query
+
+    if(query.title){
+        grocery = grocery.filter(x => x.naziv_namjernice.indexOf(query.title) >=0)
+    }
+
+    res.json(grocery)
 })
 
 
