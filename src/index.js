@@ -1,44 +1,144 @@
 import express from 'express';
 import cors from 'cors';
 import baza from './storage2';
+import connect from './db.js';
+import mongo from 'mongodb';
 
 
-const app = express(); 
+
+const app = express();
 const port = 3000;
 
-app.use(express.json ());
-app.use(cors())
+app.use(express.json());
+app.use(cors());
+
+// čitanje korisnika po id-u
+app.get('/users/:id', async (req, res) => {
+    let id = req.params.id;        // URL parametar
+    let db = await connect();
+
+    let doc = await db.collection("users").findOne({_id: mongo.ObjectId(id)})
+    res.json(doc)
+})
+
+// čitanje korisnika iz MongoDB-a
+app.get('/users', async (req, res) => {
+    let db = await connect() // pristup db objektu
+    let cursor = await db.collection("users").find()
+    let results = await cursor.toArray()
+    res.json(results)
+})
+
+// čitanje namjernica iz MongoDB-a
+app.get('/groceries', async (req, res) => {
+    let db = await connect() // pristup db objektu
+    let cursor = await db.collection("groceries").find()
+    let results = await cursor.toArray()
+    res.json(results)
+})
+
+/* čitanje stavki frižidera s MongoDB-a
+app.get('/fridge', async (req, res) => {
+    let db = await connect() // pristup db objektu
+    let cursor = await db.collection("fridge").find()
+    let results = await cursor.toArray()
+    res.json(results)
+})*/
+
+
+// čitanje shopping listi s MongoDB-a
+app.get('/shopping_lists', async (req, res) => {
+    let db = await connect() // pristup db objektu
+    let cursor = await db.collection("shopping_lists").find()
+    let results = await cursor.toArray()
+    res.json(results)
+})
+
+// trebati će za kategorije i naziv namjernice
+app.get('/posts', async (req, res) => {
+    let db = await connect()
+    let query = req.query;
+    let selekcija = {}
+
+    if (query._any) { // za upit: /posts?_all=pojam1 pojam2
+        let pretraga = query._any
+        let terms = pretraga.split(' ')
+        let atributi = ["username", "budzet"]
+        selekcija = {
+            $and: [],
+        };
+        terms.forEach((term) => {
+            let or = {
+                $or: []
+            };
+            atributi.forEach(atribut => {
+                or.$or.push({ [atribut]: new RegExp(term) });
+            })
+            selekcija.$and.push(or);
+        });
+    }
+    console.log("Selekcija", selekcija)
+    let cursor = await db.collection("users").find(selekcija)
+    let results = await cursor.toArray()
+    res.json(results)
+})
+
+// čitanje namjernica iz MongoDB uz pretragu i filtriranje
+app.get('/groceries', async (req, res) => {
+    let query = req.query
+    let filter = {}
+    if (query.naziv_namjernice) {
+        filter["naziv_namjernice"] = new RegExp(query.naziv_namjernice)
+    }
+    console.log("Filter za Mongo", filter)
+    let db = await connect()
+    let cursor = await db.collection("groceries").find(filter).sort({ kategorija: -1 })
+    let results = await cursor.toArray()
+    // Premještanje atributa _id u id
+    results.forEach(e => {
+        e.id = e._id
+        delete e._id
+    })
+    res.json(results)
+})
+
+
+
+
+// Storage stari
+
+
 
 //Frižider operacije 
 app.get('/fridge', (req, res) => {
     let cards = baza.data1.fridge.fridge_namjernice
     let query = req.query
 
-    if (query.title && query.Category ) {
+    if (query.title && query.Category) {
 
-        cards = cards.filter(x => x.naziv_namjernice.indexOf(query.title) >=0).filter(x => x.kategorija.indexOf(query.Category)  >=0)
-        
-    }else {
+        cards = cards.filter(x => x.naziv_namjernice.indexOf(query.title) >= 0).filter(x => x.kategorija.indexOf(query.Category) >= 0)
 
-        cards = cards.filter(x => x.kategorija.indexOf(query.Category)  >=0)
-        
+    } else {
+
+        cards = cards.filter(x => x.kategorija.indexOf(query.Category) >= 0)
+
     }
 
     res.json(cards)
 })
 //šoping lista operacije
-app.get('/shoppinglist',(req, res)=>{
+app.get('/shoppinglist', (req, res) => {
     let query = req.query
-    let lists=baza.data1.shopping_liste
+    let lists = baza.data1.shopping_liste
     res.json(lists)
 })
 //odabir namjernice operacije
-app.get('/choosegrocery',(req, res)=>{
-    let grocery=baza.data1.namjernice
+app.get('/choosegrocery', (req, res) => {
+    let grocery = baza.data1.namjernice
     let query = req.query
 
-    if(query.title){
-        grocery = grocery.filter(x => x.naziv_namjernice.indexOf(query.title) >=0)
+    if (query.title) {
+        grocery = grocery.filter(x => x.naziv_namjernice.indexOf(query.title) >= 0)
     }
 
     res.json(grocery)
@@ -154,8 +254,6 @@ app.post ('/sadrzajShoppingListe', (req, res) => {
     res.setHeader ('Location', '/sadrzajShoppingListe/2356');
     res.send({});
 }); */
-
-
 
 
 app.listen(port, () => console.log(`Slušam na portu ${port}!`))
